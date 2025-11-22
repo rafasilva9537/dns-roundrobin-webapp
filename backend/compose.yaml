@@ -1,7 +1,40 @@
 ﻿services:
-  webapplication1:
-    image: webapplication1
+  api:
     build:
-      context: .
-      dockerfile: WebApplication1/Dockerfile
-
+      context: ./api
+      target: final
+    ports:
+      - "5201:8080"
+    container_name: user_manage_api
+    hostname: user_manage_host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development #todo: change to production
+      - JwtConfig__Issuer=${JwtConfig__Issuer}
+      - JwtConfig__Audience=${JwtConfig__Audience}
+      - JwtConfig__Secret=${JwtConfig__Secret}
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    restart: on-failure:10
+      
+  db:
+    image:  mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    container_name: user_manage_mssql
+    hostname: mssql_host
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - MSSQL_SA_PASSWORD=${MSSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -C -P ${MSSQL_PASSWORD} -Q 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    volumes:
+      - user_manage_db:/var/opt/mssql
+    
+volumes:
+  user_manage_db:
