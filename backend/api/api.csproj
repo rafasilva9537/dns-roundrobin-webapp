@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>WebApplication1</RootNamespace>
+        <UserSecretsId>1640c463-6d9c-4ebf-9d9d-500a88ea56b9</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
