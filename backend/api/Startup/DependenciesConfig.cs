@@ -1,5 +1,6 @@
 using System.Text;
 using api.Configuration;
+using api.Constants;
 using api.Data;
 using api.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -65,7 +66,12 @@ internal static class DependenciesConfig
 
     internal static IServiceCollection AddPolicyBasedAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorizationBuilder();
+        services.AddAuthorizationBuilder()
+            .AddPolicy(PolicyConstants.AdminOnly, policy =>
+            {
+                policy.RequireRole(RoleConstants.Admin);
+            });
+        
         return services;
     }
 }

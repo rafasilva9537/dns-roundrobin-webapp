@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using api.Configuration;
+using api.Data;
 using api.Endpoints;
 using api.Startup;
 
@@ -30,10 +31,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseDatabase();
+
 app.UseHttpsRedirection();
 
-//app.UseAuthorization();
-//app.UseAuthentication();
+app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapAccountEndpoints();
 app.MapAuthEndpoints();
