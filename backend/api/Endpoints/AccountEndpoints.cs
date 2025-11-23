@@ -4,6 +4,6 @@ internal static class AccountEndpoints
 {
     internal static void MapAccountEndpoints(this IEndpointRouteBuilder app)
     {
-        var endpoints = app.MapGroup("/account");
+        var endpoints = app.MapGroup("/accounts");
     }
 }
