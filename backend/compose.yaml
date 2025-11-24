@@ -1,23 +1,4 @@
 ﻿services:
-  api:
-    build:
-      context: ./api
-      target: final
-    ports:
-      - "5201:8080"
-    container_name: user_manage_api
-    hostname: user_manage_host
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development #todo: change to production
-      - JwtConfig__Issuer=${JwtConfig__Issuer}
-      - JwtConfig__Audience=${JwtConfig__Audience}
-      - JwtConfig__Secret=${JwtConfig__Secret}
-    depends_on:
-      db:
-        condition: service_healthy
-        restart: true
-    restart: on-failure:10
-      
   db:
     image:  mcr.microsoft.com/mssql/server:2022-latest
     ports:
@@ -35,6 +16,47 @@
       retries: 15
     volumes:
       - user_manage_db:/var/opt/mssql
-    
+
+  api1:
+    build:
+      context: ./api
+      target: final
+    ports:
+      - "5001:8080"
+    environment: &api_env
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - JwtConfig__Issuer=${JwtConfig__Issuer}
+      - JwtConfig__Audience=${JwtConfig__Audience}
+      - JwtConfig__Secret=${JwtConfig__Secret}
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  api2:
+    build:
+      context: ./api
+      target: final
+    ports:
+      - "5002:8080"
+    environment: *api_env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  api3:
+    build:
+      context: ./api
+      target: final
+    ports:
+      - "5003:8080"
+    environment: *api_env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
 volumes:
   user_manage_db:
