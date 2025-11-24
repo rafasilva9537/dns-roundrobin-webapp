@@ -28,6 +28,17 @@ builder.Services.AddPolicyBasedAuthorization();
 builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 builder.Services.AddGlobalExceptionHandling();
 
+// TODO: Improve CORS to restrict to only the frontend
+const string myAllowAllOrigins = "myAllowAllOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(myAllowAllOrigins,
+        policyBuilder => policyBuilder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,6 +59,8 @@ else
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 app.UseAuthentication();
