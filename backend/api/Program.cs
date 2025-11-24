@@ -60,7 +60,7 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.UseCors();
+app.UseCors(myAllowAllOrigins);
 
 app.UseAuthorization();
 app.UseAuthentication();
