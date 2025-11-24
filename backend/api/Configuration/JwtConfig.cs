@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.Configuration;
 
-public class JwtConfigOptions
+public class JwtConfig
 {
     public const string SectionName = "JwtConfig";
 

@@ -27,15 +27,15 @@ internal static class DependenciesConfig
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
-            var jwtConfigOptions = configuration.GetSection(JwtConfigOptions.SectionName).Get<JwtConfigOptions>();
-            if (jwtConfigOptions is null) 
-                throw new InvalidOperationException($"Failed to load {JwtConfigOptions.SectionName} from configuration.");
+            var jwtConfig = configuration.GetSection(JwtConfig.SectionName).Get<JwtConfig>();
+            if (jwtConfig is null) 
+                throw new InvalidOperationException($"Failed to load {JwtConfig.SectionName} from configuration.");
 
             options.TokenValidationParameters = new TokenValidationParameters()
             {
-                ValidIssuer = jwtConfigOptions.Issuer,
-                ValidAudience = jwtConfigOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfigOptions.Secret)),
+                ValidIssuer = jwtConfig.Issuer,
+                ValidAudience = jwtConfig.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret)),
                 ClockSkew = TimeSpan.Zero
             };
         });

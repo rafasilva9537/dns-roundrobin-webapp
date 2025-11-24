@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using api.Configuration;
-using api.Data;
 using api.Endpoints;
 using api.Startup;
 
@@ -10,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddOptions<JwtConfigOptions>()
-    .BindConfiguration(JwtConfigOptions.SectionName)
+builder.Services.AddOptions<JwtConfig>()
+    .BindConfiguration(JwtConfig.SectionName)
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
