@@ -32,7 +32,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseDatabase();
+if (app.Environment.IsProduction())
+{
+    app.UseProductionDatabase();
+}
+else
+{
+    app.UseNonProductionDatabase();
+}
 
 app.UseHttpsRedirection();
 
