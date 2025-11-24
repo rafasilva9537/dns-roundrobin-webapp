@@ -18,6 +18,7 @@ internal static class DependenciesConfig
         services.AddScoped<ITokenService, TokenService>();
         
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IDateTimeOffsetProvider, DateTimeOffsetProvider>();
         
         return services;
     }

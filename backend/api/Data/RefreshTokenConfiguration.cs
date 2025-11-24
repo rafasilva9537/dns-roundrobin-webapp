@@ -11,8 +11,8 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
         builder.ToTable("RefreshTokens");
         builder.HasKey(rt => rt.Id);
 
-        builder.Property(rt => rt.Token).HasMaxLength(4000);
-        builder.HasIndex(rt => rt.Token).IsUnique();
+        builder.Property(rt => rt.TokenHash).HasMaxLength(4000);
+        builder.HasIndex(rt => rt.TokenHash).IsUnique();
         
         builder.HasOne(rt => rt.User)
             .WithMany()
