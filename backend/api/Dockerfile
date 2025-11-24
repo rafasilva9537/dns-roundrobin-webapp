@@ -1,20 +1,22 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
+# Because Dockerfile is inside /api, we are already in that folder at build time
 WORKDIR /src
-COPY ["api/api.csproj", "api/"]
-RUN dotnet restore "api/api.csproj"
+
+# Copy everything inside the api directory (this folder)
 COPY . .
-WORKDIR "/src/api"
-RUN dotnet build "./api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN dotnet restore "api.csproj"
+RUN dotnet build "api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

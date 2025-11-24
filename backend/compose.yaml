@@ -33,6 +33,7 @@
       db:
         condition: service_healthy
         restart: true
+    restart: on-failure:10
 
   api2:
     build:
@@ -45,6 +46,7 @@
       db:
         condition: service_healthy
         restart: true
+    restart: on-failure:10
 
   api3:
     build:
@@ -57,6 +59,7 @@
       db:
         condition: service_healthy
         restart: true
+    restart: on-failure:10
 
 volumes:
   user_manage_db:
