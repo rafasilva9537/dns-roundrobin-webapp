@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using api.Configuration;
 using api.Entities;
@@ -56,5 +57,10 @@ internal class TokenService : ITokenService
         string token = jwtHandler.CreateToken(securityDescriptor);
 
         return token;
+    }
+
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
 }

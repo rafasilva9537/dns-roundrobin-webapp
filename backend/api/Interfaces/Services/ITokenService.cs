@@ -15,4 +15,12 @@ public interface ITokenService
     /// A task that represents the asynchronous operation. The task result contains the generated JWT as a string.
     /// </returns>
     Task<string> GenerateToken(User user);
+
+    /// <summary>
+    /// Generates a refresh token that can be used to get a new access JSON Web Token (JWT) without requiring the user's credentials.
+    /// </summary>
+    /// <returns>
+    /// The generated refresh token as a string.
+    /// </returns>
+    string GenerateRefreshToken();
 }
