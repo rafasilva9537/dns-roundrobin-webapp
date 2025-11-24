@@ -8,13 +8,21 @@ namespace api.Interfaces.Services;
 public interface ITokenService
 {
     /// <summary>
-    /// Generates a JSON Web Token (JWT) for the specified user, embedding user claims and other token-related properties.
+    /// Generates a JSON Web Token (JWT) for the provided user, identifying the user's session and login time.
     /// </summary>
-    /// <param name="user">The user for whom the token is being generated. This includes user information such as username and email.</param>
+    /// <param name="user">
+    /// The user for whom the token is being generated. This should be an instance of the User class containing user details.
+    /// </param>
+    /// <param name="sessionId">
+    /// A unique identifier for the user's session, used to track and differentiate sessions.
+    /// </param>
+    /// <param name="loginDateUtc">
+    /// The UTC date and time of the user's login, marking when the token is issued.
+    /// </param>
     /// <returns>
-    /// A task that represents the asynchronous operation. The task result contains the generated JWT as a string.
+    /// A task that represents the asynchronous operation. The task result contains the generated token as a string.
     /// </returns>
-    Task<string> GenerateToken(User user);
+    Task<string> GenerateToken(User user, Guid sessionId, DateTimeOffset loginDateUtc);
 
     /// <summary>
     /// Generates a refresh token that can be used to get a new access JSON Web Token (JWT) without requiring the user's credentials.

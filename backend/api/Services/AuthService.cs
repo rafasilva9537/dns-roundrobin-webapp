@@ -59,10 +59,12 @@ internal class AuthService : IAuthService
             throw new InvalidOperationException($"Registration failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
         }
 
-        string accessToken = await _tokenService.GenerateToken(newUser);
+        var sessionId = Guid.NewGuid();
+        var loginDate = _dateTimeProvider.UtcNow;
+        string accessToken = await _tokenService.GenerateToken(newUser, sessionId, loginDate);
         string refreshToken = _tokenService.GenerateRefreshToken();
 
-        await SaveRefreshTokenAsync(newUser.Id, refreshToken);
+        await SaveRefreshTokenAsync(newUser.Id, refreshToken, sessionId, loginDate);
 
         return new RegisterUserResponse(accessToken, refreshToken);
     }
@@ -75,10 +77,12 @@ internal class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid credentials.");
         }
 
-        string accessToken = await _tokenService.GenerateToken(user);
+        var sessionId = Guid.NewGuid();
+        var loginDate = _dateTimeProvider.UtcNow;
+        string accessToken = await _tokenService.GenerateToken(user, sessionId, loginDate);
         string refreshToken = _tokenService.GenerateRefreshToken();
 
-        await SaveRefreshTokenAsync(user.Id, refreshToken);
+        await SaveRefreshTokenAsync(user.Id, refreshToken, sessionId, loginDate);
 
         return new LoginUserResponse(accessToken, refreshToken);
     }
@@ -113,7 +117,7 @@ internal class AuthService : IAuthService
             throw new UnauthorizedAccessException("Refresh token has expired.");
         }
 
-        string newAccessToken = await _tokenService.GenerateToken(refreshToken.User);
+        string newAccessToken = await _tokenService.GenerateToken(refreshToken.User, refreshToken.Id, refreshToken.CreatedAtUtc);
         string newRefreshTokenValue = _tokenService.GenerateRefreshToken();
         
         int tokenExpirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
@@ -125,13 +129,15 @@ internal class AuthService : IAuthService
         return new RefreshTokenResponse(newAccessToken, newRefreshTokenValue);
     }
 
-    private async Task SaveRefreshTokenAsync(long userId, string refreshToken)
+    private async Task SaveRefreshTokenAsync(long userId, string refreshToken, Guid sessionId, DateTime createdAtUtc)
     {
         int expirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
         var tokenEntity = new RefreshToken
         {
+            Id = sessionId,
             TokenHash = HashToken(refreshToken),
             UserId = userId,
+            CreatedAtUtc = createdAtUtc,
             ExpiresOnUtc = _dateTimeProvider.UtcNow.AddDays(expirationDays)
         };
 

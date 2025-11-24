@@ -27,17 +27,19 @@ internal class TokenService : ITokenService
         _dateTimeProvider = dateTimeProvider;
     }
     
-    public async Task<string> GenerateToken(User user)
+    public async Task<string> GenerateToken(User user, Guid sessionId, DateTimeOffset loginDateUtc)
     {
         var jwtConfig = _jwtConfigOptions.Value;
         if (jwtConfig is null) throw new InvalidOperationException($"Failed to load {JwtConfig.SectionName} from configuration.");
-        
+    
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret));
 
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim("session_id", sessionId.ToString()),
+            new Claim("login_date", loginDateUtc.ToString("o")) // ISO 8601 format
         };
         var userRoles = await _userManager.GetRolesAsync(user);
         claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));

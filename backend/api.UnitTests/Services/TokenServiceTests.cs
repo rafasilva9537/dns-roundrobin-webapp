@@ -58,7 +58,7 @@ public class TokenServiceTests
     
         
         // Act
-        string tokenString = await tokenService.GenerateToken(user);
+        string tokenString = await tokenService.GenerateToken(user, Guid.Empty, DateTimeOffset.MinValue);
         
         
         // Assert
@@ -114,7 +114,7 @@ public class TokenServiceTests
     
         
         // Act
-        string tokenString = await tokenService.GenerateToken(user);
+        string tokenString = await tokenService.GenerateToken(user, Guid.Empty, DateTimeOffset.MinValue);
         
         
         // Assert
@@ -156,7 +156,7 @@ public class TokenServiceTests
     
         
         // Act
-        string tokenString = await tokenService.GenerateToken(user);
+        string tokenString = await tokenService.GenerateToken(user, Guid.Empty, DateTimeOffset.MinValue);
         
         
         // Assert
@@ -205,7 +205,7 @@ public class TokenServiceTests
     
         
         // Act
-        string tokenString = await tokenService.GenerateToken(user);
+        string tokenString = await tokenService.GenerateToken(user, Guid.Empty, DateTimeOffset.MinValue);
         
         
         // Assert
