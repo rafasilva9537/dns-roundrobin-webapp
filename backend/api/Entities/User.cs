@@ -11,6 +11,7 @@ public class User : IdentityUser<long>
     public override string Email { get; set; } = string.Empty;
 #pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
     
+    public Guid PublicId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
     public string Description { get; set; } = string.Empty;

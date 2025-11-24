@@ -9,6 +9,7 @@ namespace api.Data;
 public class AppDbContext : IdentityDbContext<User, IdentityRole<long>, long>
 {
     public override DbSet<User> Users { get; set; }
+    internal DbSet<RefreshToken> RefreshTokens { get; set; }
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
