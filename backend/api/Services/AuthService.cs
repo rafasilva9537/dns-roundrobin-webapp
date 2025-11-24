@@ -16,7 +16,6 @@ internal class AuthService : IAuthService
     private readonly ITokenService _tokenService;
     private readonly UserManager<User> _userManager;
     private readonly AppDbContext _dbContext;
-    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
     private readonly IOptions<JwtConfig> _jwtConfigOptions;
     
@@ -24,14 +23,12 @@ internal class AuthService : IAuthService
         ITokenService tokenService, 
         UserManager<User> userManager, 
         AppDbContext dbContext,
-        IDateTimeProvider dateTimeProvider,
         IDateTimeOffsetProvider dateTimeOffsetProvider,
         IOptions<JwtConfig> jwtConfigOptions)
     {
         _tokenService = tokenService;
         _userManager = userManager;
         _dbContext = dbContext;
-        _dateTimeProvider = dateTimeProvider;
         _dateTimeOffsetProvider = dateTimeOffsetProvider;
         _jwtConfigOptions = jwtConfigOptions;
     }
@@ -60,8 +57,9 @@ internal class AuthService : IAuthService
         }
 
         var sessionId = Guid.NewGuid();
-        var loginDate = _dateTimeProvider.UtcNow;
-        string accessToken = await _tokenService.GenerateToken(newUser, sessionId, loginDate);
+        var loginDate = _dateTimeOffsetProvider.UtcNow; 
+        
+        string accessToken = await _tokenService.GenerateToken(newUser, sessionId, loginDate); 
         string refreshToken = _tokenService.GenerateRefreshToken();
 
         await SaveRefreshTokenAsync(newUser.Id, refreshToken, sessionId, loginDate);
@@ -78,7 +76,8 @@ internal class AuthService : IAuthService
         }
 
         var sessionId = Guid.NewGuid();
-        var loginDate = _dateTimeProvider.UtcNow;
+        var loginDate = _dateTimeOffsetProvider.UtcNow;
+        
         string accessToken = await _tokenService.GenerateToken(user, sessionId, loginDate);
         string refreshToken = _tokenService.GenerateRefreshToken();
 
@@ -112,16 +111,16 @@ internal class AuthService : IAuthService
         {
             throw new UnauthorizedAccessException("Invalid refresh token.");
         }
-        if (refreshToken.ExpiresOnUtc < _dateTimeProvider.UtcNow)
+        if (refreshToken.ExpiresOnUtc < _dateTimeOffsetProvider.UtcNow)
         {
             throw new UnauthorizedAccessException("Refresh token has expired.");
         }
-
+        
         string newAccessToken = await _tokenService.GenerateToken(refreshToken.User, refreshToken.Id, refreshToken.CreatedAtUtc);
         string newRefreshTokenValue = _tokenService.GenerateRefreshToken();
         
         int tokenExpirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
-        refreshToken.ExpiresOnUtc = _dateTimeProvider.UtcNow.AddDays(tokenExpirationDays);
+        refreshToken.ExpiresOnUtc = _dateTimeOffsetProvider.UtcNow.AddDays(tokenExpirationDays);
         refreshToken.TokenHash = HashToken(newRefreshTokenValue);
         
         await _dbContext.SaveChangesAsync();
@@ -129,7 +128,7 @@ internal class AuthService : IAuthService
         return new RefreshTokenResponse(newAccessToken, newRefreshTokenValue);
     }
 
-    private async Task SaveRefreshTokenAsync(long userId, string refreshToken, Guid sessionId, DateTime createdAtUtc)
+    private async Task SaveRefreshTokenAsync(long userId, string refreshToken, Guid sessionId, DateTimeOffset createdAtUtc)
     {
         int expirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
         var tokenEntity = new RefreshToken
@@ -138,7 +137,7 @@ internal class AuthService : IAuthService
             TokenHash = HashToken(refreshToken),
             UserId = userId,
             CreatedAtUtc = createdAtUtc,
-            ExpiresOnUtc = _dateTimeProvider.UtcNow.AddDays(expirationDays)
+            ExpiresOnUtc = _dateTimeOffsetProvider.UtcNow.AddDays(expirationDays)
         };
 
         _dbContext.RefreshTokens.Add(tokenEntity);
