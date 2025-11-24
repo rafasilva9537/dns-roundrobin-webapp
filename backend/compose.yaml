@@ -29,6 +29,8 @@
       - JwtConfig__Issuer=${JwtConfig__Issuer}
       - JwtConfig__Audience=${JwtConfig__Audience}
       - JwtConfig__Secret=${JwtConfig__Secret}
+      - JwtConfig__AccessTokenExpirationMinutes=${JwtConfig__AccessTokenExpirationMinutes}
+      - JwtConfig__RefreshTokenExpirationDays=${JwtConfig__RefreshTokenExpirationDays}
     depends_on:
       db:
         condition: service_healthy
