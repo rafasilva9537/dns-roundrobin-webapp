@@ -26,6 +26,7 @@ builder.Services.AddAppIdentity();
 builder.Services.AddPolicyBasedAuthorization();
 
 builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
+builder.Services.AddGlobalExceptionHandling();
 
 var app = builder.Build();
 
@@ -43,6 +44,8 @@ else
 {
     app.UseNonProductionDatabase();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

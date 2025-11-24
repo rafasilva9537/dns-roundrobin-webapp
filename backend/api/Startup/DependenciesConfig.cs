@@ -1,11 +1,14 @@
+using System.Diagnostics;
 using System.Text;
 using api.Configuration;
 using api.Constants;
 using api.Data;
 using api.Entities;
 using api.Interfaces.Services;
+using api.Middlewares;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,6 +19,7 @@ internal static class DependenciesConfig
     internal static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
         
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IDateTimeOffsetProvider, DateTimeOffsetProvider>();
@@ -83,6 +87,18 @@ internal static class DependenciesConfig
             {
                 policy.RequireRole(RoleConstants.Admin);
             });
+        
+        return services;
+    }
+    
+    public static IServiceCollection AddGlobalExceptionHandling(this IServiceCollection services)
+    {
+        services.AddProblemDetails(options => options.CustomizeProblemDetails = context =>
+        {
+            var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+            context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+        });
+        services.AddExceptionHandler<GlobalExceptionHandler>();
         
         return services;
     }
