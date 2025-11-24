@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using api.Configuration;
 using api.Endpoints;
 using api.Startup;
+using api.Startup.OpenApiTransformers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,12 +25,14 @@ builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 builder.Services.AddAppIdentity();
 builder.Services.AddPolicyBasedAuthorization();
 
+builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapApiDocumentation();
 }
 
 if (app.Environment.IsProduction())

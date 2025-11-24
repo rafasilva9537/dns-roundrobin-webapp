@@ -2,6 +2,7 @@ using api.Data;
 using api.Data.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 namespace api.Startup;
 
@@ -23,5 +24,17 @@ internal static class RequestPipelineConfig
         using var scope = app.Services.CreateScope();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
         DatabaseSeeder.SeedRoles(roleManager);
+    }
+
+    internal static void MapApiDocumentation(this WebApplication app)
+    {
+        app.MapOpenApi();
+        app.MapScalarApiReference(options =>
+        {
+            options.Title = "User Management API";
+            options.Theme = ScalarTheme.BluePlanet;
+            options.DarkMode = true;
+            options.DefaultHttpClient = KeyValuePair.Create(ScalarTarget.JavaScript, ScalarClient.Axios);
+        });
     }
 }
