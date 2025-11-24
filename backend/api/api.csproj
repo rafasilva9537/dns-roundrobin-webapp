@@ -20,6 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="api.UnitTests" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

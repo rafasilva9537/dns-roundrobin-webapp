@@ -18,6 +18,8 @@ builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.R
 
 builder.Services.AddAppDbContext(builder.Configuration);
 
+builder.Services.AddAppServices();
+
 builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 builder.Services.AddAppIdentity();
 builder.Services.AddPolicyBasedAuthorization();

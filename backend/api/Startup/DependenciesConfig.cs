@@ -3,6 +3,8 @@ using api.Configuration;
 using api.Constants;
 using api.Data;
 using api.Entities;
+using api.Interfaces.Services;
+using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +13,15 @@ namespace api.Startup;
 
 internal static class DependenciesConfig
 {
+    internal static IServiceCollection AddAppServices(this IServiceCollection services)
+    {
+        services.AddScoped<ITokenService, TokenService>();
+        
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        
+        return services;
+    }
+    
     internal static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         string? connectionString = configuration.GetConnectionString("DefaultConnection");
