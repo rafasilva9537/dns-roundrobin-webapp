@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Distributed Session Demo</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app" class="container">
+      
+      <!-- Login View -->
+      <div id="login-view" class="card">
+        <h1>System Login</h1>
+        <div id="login-error-msg" class="error-msg hidden"></div>
+        <form id="login-form">
+          <div class="input-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" required placeholder="Enter username" />
+          </div>
+          <div class="input-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required placeholder="Enter password" />
+          </div>
+          <button type="submit">Sign In</button>
+        </form>
+        <p class="toggle-text">
+          Don't have an account? <a href="#" id="link-to-register">Register</a>
+        </p>
+      </div>
+
+      <!-- Register View -->
+      <div id="register-view" class="card hidden">
+        <h1>Create Account</h1>
+        <div id="register-error-msg" class="error-msg hidden"></div>
+        <form id="register-form">
+            <div class="input-group">
+                <label for="reg-username">Username</label>
+                <input type="text" id="reg-username" required placeholder="Choose a username" />
+            </div>
+            <div class="input-group">
+                <label for="reg-email">Email</label>
+                <input type="email" id="reg-email" required placeholder="Enter email" />
+            </div>
+            <div class="input-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" required placeholder="Choose a password" />
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p class="toggle-text">
+            Already have an account? <a href="#" id="link-to-login">Sign In</a>
+        </p>
+      </div>
+
+      <!-- Profile View (Unchanged) -->
+      <div id="profile-view" class="card hidden">
+        <h1>User Session</h1>
+        <div id="profile-content">
+          <div class="profile-item">
+            <div class="label">User</div>
+            <div class="value" id="p-username">Loading...</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Login Time</div>
+            <div class="value" id="p-login-time">Loading...</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Session ID</div>
+            <div class="value" id="p-session">Loading...</div>
+          </div>
+          <div class="profile-item">
+            <div class="label">Connected To Server</div>
+            <div class="value server-badge" id="p-server">Loading...</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="btn-refresh" class="secondary">Refresh Data (Hit Load Balancer)</button>
+          <button id="btn-logout" class="danger">Sign Out</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
