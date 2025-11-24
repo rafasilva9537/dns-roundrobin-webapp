@@ -5,3 +5,6 @@ public sealed record LoginUserResponse(string AccessToken, string RefreshToken);
 
 public sealed record RegisterUserRequest(string Username, string Email, string Password);
 public sealed record RegisterUserResponse(string AccessToken, string RefreshToken);
+
+public sealed record RefreshTokenRequest(string RefreshToken);
+public sealed record RefreshTokenResponse(string AccessToken, string RefreshToken);

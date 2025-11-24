@@ -94,6 +94,37 @@ internal class AuthService : IAuthService
         }
     }
 
+    public async Task<RefreshTokenResponse> RefreshAsync(RefreshTokenRequest request)
+    {
+        // #TODO: improve to handle multiple refresh tokens per user
+        // For now, editing existing refresh token instead of creating a new one, for simplicity.
+        string hashedToken = HashToken(request.RefreshToken);
+
+        var refreshToken = await _dbContext.RefreshTokens
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(rt => rt.TokenHash == hashedToken);
+
+        if (refreshToken is null)
+        {
+            throw new UnauthorizedAccessException("Invalid refresh token.");
+        }
+        if (refreshToken.ExpiresOnUtc < _dateTimeProvider.UtcNow)
+        {
+            throw new UnauthorizedAccessException("Refresh token has expired.");
+        }
+
+        string newAccessToken = await _tokenService.GenerateToken(refreshToken.User);
+        string newRefreshTokenValue = _tokenService.GenerateRefreshToken();
+        
+        int tokenExpirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
+        refreshToken.ExpiresOnUtc = _dateTimeProvider.UtcNow.AddDays(tokenExpirationDays);
+        refreshToken.TokenHash = HashToken(newRefreshTokenValue);
+        
+        await _dbContext.SaveChangesAsync();
+
+        return new RefreshTokenResponse(newAccessToken, newRefreshTokenValue);
+    }
+
     private async Task SaveRefreshTokenAsync(long userId, string refreshToken)
     {
         int expirationDays = _jwtConfigOptions.Value.RefreshTokenExpirationDays;
