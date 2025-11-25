@@ -1,0 +1,21 @@
+services:
+  bind9:
+    image: ubuntu/bind9:9.18-22.04_beta
+    container_name: bind9-server
+    environment:
+      - TZ=America/Sao_Paulo
+      - BIND9_USER=root
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "953:953/tcp" # RNDC if you use it later
+    healthcheck:
+      test: ["CMD", "named-checkconf", "/etc/bind/named.conf"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - ./config:/etc/bind
+      - ./cache:/var/cache/bind
+      - ./records:/var/lib/bind
+    restart: unless-stopped
