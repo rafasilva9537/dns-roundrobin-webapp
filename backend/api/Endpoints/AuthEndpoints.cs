@@ -24,15 +24,8 @@ internal static class AuthEndpoints
 
         endpoints.MapPost("/refresh", async ([FromBody] RefreshTokenRequest request, [FromServices] IAuthService authService) =>
         {
-            try
-            {
-                var response = await authService.RefreshAsync(request);
-                return Results.Ok(response);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var response = await authService.RefreshAsync(request);
+            return Results.Ok(response);
         });
         
         endpoints.MapPost("/logout", async ([FromBody] RefreshTokenRequest request, [FromServices] IAuthService authService) =>

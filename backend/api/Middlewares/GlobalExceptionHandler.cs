@@ -1,3 +1,4 @@
+using api.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,15 +25,18 @@ internal class GlobalExceptionHandler : IExceptionHandler
 
         int status = exception switch
         {
-            // #todo: improve error handling
-            UnauthorizedAccessException => StatusCodes.Status400BadRequest,
-            InvalidOperationException => StatusCodes.Status404NotFound,
+            UserAlreadyExistsException => StatusCodes.Status409Conflict,
+            InvalidCredentialsException => StatusCodes.Status401Unauthorized,
+            InvalidRefreshTokenException => StatusCodes.Status401Unauthorized,
+            RegistrationFailedException => StatusCodes.Status400BadRequest,
+            InvalidOperationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError,
         };
 
         ProblemDetails problemDetails = new()
         {
             Status = status,
+            Title = "An error occurred while processing your request.",
         };
         httpContext.Response.StatusCode = status;
 

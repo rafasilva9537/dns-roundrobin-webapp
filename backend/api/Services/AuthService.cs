@@ -2,6 +2,7 @@ using api.Configuration;
 using api.Data;
 using api.Dtos;
 using api.Entities;
+using api.Exceptions;
 using api.Interfaces.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ internal class AuthService : IAuthService
         var existingUser = await _userManager.FindByNameAsync(userRequest.Username);
         if (existingUser is not null)
         {
-            throw new InvalidOperationException("User already exists.");
+            throw new UserAlreadyExistsException($"User with username '{userRequest.Username}' already exists.");
         }
 
         var utcNow = _dateTimeOffsetProvider.UtcNow;
@@ -53,7 +54,8 @@ internal class AuthService : IAuthService
         var result = await _userManager.CreateAsync(newUser, userRequest.Password);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException($"Registration failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            string errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new RegistrationFailedException($"Registration failed: {errors}");
         }
 
         var sessionId = Guid.NewGuid();
@@ -72,7 +74,7 @@ internal class AuthService : IAuthService
         var user = await _userManager.FindByNameAsync(userRequest.Username);
         if (user is null || !await _userManager.CheckPasswordAsync(user, userRequest.Password))
         {
-            throw new UnauthorizedAccessException("Invalid credentials.");
+            throw new InvalidCredentialsException("Invalid username or password.");
         }
 
         var sessionId = Guid.NewGuid();
@@ -109,11 +111,11 @@ internal class AuthService : IAuthService
 
         if (refreshToken is null)
         {
-            throw new UnauthorizedAccessException("Invalid refresh token.");
+            throw new InvalidRefreshTokenException("Invalid refresh token.");
         }
         if (refreshToken.ExpiresOnUtc < _dateTimeOffsetProvider.UtcNow)
         {
-            throw new UnauthorizedAccessException("Refresh token has expired.");
+            throw new InvalidRefreshTokenException("Refresh token has expired.");
         }
         
         string newAccessToken = await _tokenService.GenerateToken(refreshToken.User, refreshToken.Id, refreshToken.CreatedAtUtc);
