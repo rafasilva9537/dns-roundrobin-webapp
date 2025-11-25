@@ -3,7 +3,7 @@ $TTL 2
 $ORIGIN meutrabalho.com.br.
 
 @    IN SOA  ns1.meutrabalho.com.br. admin.meutrabalho.com.br. (
-           2025112500 ; serial YYYYMMDDnn
+           2025112503 ; serial YYYYMMDDnn
            1h        ; refresh
            5m        ; retry
            1w     ; expire
@@ -12,6 +12,12 @@ $ORIGIN meutrabalho.com.br.
      IN NS   ns1.meutrabalho.com.br.
 ns1  IN A    10.94.217.143   ; IP of your DNS host
 
-www  IN A    10.94.217.151
-www  IN A    10.94.217.152
-www  IN A    10.94.217.153
+; A records for apex/root domain
+@    IN A    10.94.217.151
+@    IN A    10.94.217.152
+@    IN A    10.94.217.153
+
+; Records for subdomains
+www    IN A    10.94.217.151
+www    IN A    10.94.217.152
+www    IN A    10.94.217.153

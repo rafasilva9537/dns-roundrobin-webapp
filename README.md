@@ -130,23 +130,29 @@ And all are externally visible from your phone.
 In the zone file for `meutrabalho.com.br`:
 
 ```dns
-$TTL 3
+$TTL 2
+
 $ORIGIN meutrabalho.com.br.
 
-@   IN SOA  ns1.meutrabalho.com.br. admin.meutrabalho.com.br. (
-        2025112500 ; serial
-        3600       ; refresh
-        900        ; retry
-        604800     ; expire
-        1          ; minimum / negative caching
+@    IN SOA  ns1.meutrabalho.com.br. admin.meutrabalho.com.br. (
+           2025112500 ; serial YYYYMMDDnn
+           1h        ; refresh
+           5m        ; retry
+           1w     ; expire
+           1          ; minimum TTL / negative caching
 )
+     IN NS   ns1.meutrabalho.com.br.
+ns1  IN A    10.94.217.143   ; IP of your DNS host
 
-    IN NS   ns1.meutrabalho.com.br.
-ns1 IN A    10.94.217.143   ; IP of your DNS host
+; A records for apex/root domain
+@    IN A    10.94.217.151
+@    IN A    10.94.217.152
+@    IN A    10.94.217.153
 
-www IN A    10.94.217.151
-www IN A    10.94.217.152
-www IN A    10.94.217.153
+; Records for subdomains
+www    IN A    10.94.217.151
+www    IN A    10.94.217.152
+www    IN A    10.94.217.153
 ```
 
 > **Note:** The very low TTL forces clients to request DNS answers frequently, enabling Round Robin switching.
