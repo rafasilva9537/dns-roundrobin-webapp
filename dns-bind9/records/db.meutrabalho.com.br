@@ -1,4 +1,4 @@
-$TTL 3
+$TTL 2
 
 $ORIGIN meutrabalho.com.br.
 
@@ -10,8 +10,8 @@ $ORIGIN meutrabalho.com.br.
            1          ; minimum TTL / negative caching
 )
      IN NS   ns1.meutrabalho.com.br.
-ns1  IN A    192.168.1.5
+ns1  IN A    10.94.217.143   ; IP of your DNS host
 
-www  IN A    192.168.1.10
-www  IN A    192.168.1.11
-www  IN A    192.168.1.12
+www  IN A    10.94.217.151
+www  IN A    10.94.217.152
+www  IN A    10.94.217.153

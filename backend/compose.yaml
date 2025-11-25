@@ -22,7 +22,7 @@
       context: ./api
       target: final
     ports:
-      - "5001:8080"
+      - "10.94.217.151:80:8080"
     hostname: api1_server
     environment: &api_env
       - ASPNETCORE_ENVIRONMENT=Development
@@ -43,7 +43,7 @@
       context: ./api
       target: final
     ports:
-      - "5002:8080"
+      - "10.94.217.152:80:8080"
     hostname: api2_server
     environment: *api_env
     depends_on:
@@ -57,7 +57,7 @@
       context: ./api
       target: final
     ports:
-      - "5003:8080"
+      - "10.94.217.153:80:8080"
     hostname: api3_server
     environment: *api_env
     depends_on:
