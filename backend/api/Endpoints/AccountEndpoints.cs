@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using api.Dtos;
 using api.Entities;
@@ -13,6 +14,9 @@ internal static class AccountEndpoints
 
         var endpoints = app.MapGroup("/accounts")
             .RequireAuthorization();
+
+        endpoints.MapGet("/", () => Results.Ok($"Account endpoints are working in server '{Dns.GetHostName()}'.")).
+        AllowAnonymous();
 
         endpoints.MapGet("/logged-user", async (UserManager<User> userManager, ClaimsPrincipal claimsPrincipal) =>
         {
@@ -34,7 +38,7 @@ internal static class AccountEndpoints
                 user.UserName!,
                 loginDate,
                 sessionId,
-                System.Net.Dns.GetHostName()
+                Dns.GetHostName()
             );
 
             return Results.Ok(response);
