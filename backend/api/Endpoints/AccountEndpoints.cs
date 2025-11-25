@@ -2,6 +2,7 @@ using System.Security.Claims;
 using api.Dtos;
 using api.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace api.Endpoints;
 
@@ -15,7 +16,7 @@ internal static class AccountEndpoints
 
         endpoints.MapGet("/logged-user", async (UserManager<User> userManager, ClaimsPrincipal claimsPrincipal) =>
         {
-            string? userName = claimsPrincipal.Identity?.Name;
+            string? userName = claimsPrincipal.FindFirstValue(JwtRegisteredClaimNames.Name);
             if (string.IsNullOrEmpty(userName))
             {
                 return Results.Unauthorized();

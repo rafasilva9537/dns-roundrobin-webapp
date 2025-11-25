@@ -62,8 +62,8 @@ app.UseHttpsRedirection();
 
 app.UseCors(myAllowAllOrigins);
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapAccountEndpoints();
 app.MapAuthEndpoints();
