@@ -15,7 +15,7 @@ export interface LoggedUserResponse {
     userName: string;
     loginDate: string;
     sessionId: string;
-    getHostName: string;
+    hostName: string;
 }
 
 export interface RefreshTokenRequest {
@@ -59,6 +59,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem('refreshToken');
         if (!refreshToken) throw new Error('No refresh token available');
 
+        // Use a fresh axios instance to avoid interceptor loops
         const { data } = await axios.post<LoginResponse>(`${BASE_URL}/auth/refresh`, {
           refreshToken,
         } as RefreshTokenRequest);

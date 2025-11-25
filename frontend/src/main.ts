@@ -121,7 +121,7 @@ async function fetchProfile() {
     
     pUsername.textContent = data.userName;
     pSession.textContent = data.sessionId;
-    pServer.textContent = data.getHostName;
+    pServer.textContent = data.hostName;
     
     // Format Date
     const date = new Date(data.loginDate);
