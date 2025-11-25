@@ -8,7 +8,7 @@ Multi-server ASP.NET web application load-balanced via DNS Round Robin, where us
 
 This project demonstrates horizontal scaling, DNS-based load balancing, and state sharing across instances in a fully containerized environment.
 
-## Setup
+## DNS Setup
 
 The following steps describe how to configure the development machine (Debian/Ubuntu/Mint) so the BIND9 DNS container and the backend API containers can be reached from any device in the LAN.
 
@@ -174,3 +174,21 @@ will resolve to:
 ...in a round-robin cycle.
 
 -----
+
+## API Setup
+### 1\. Configure User Secrets
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost,1433; Database=UserManagementDb; MultipleActiveResultSets=True; User ID=sa;Password='examplePassword1234'; Encrypt=False;",
+    "DbTestConnection": "Server=localhost,1433; Database=UserManagementDbTest; MultipleActiveResultSets=True; User ID=sa;Password='examplePassword1234'; Encrypt=False;"
+  },
+  "JwtConfig": {
+    "Secret": "a-string-secret-at-least-256-bits-long",
+    "Issuer": "http://localhost:5201/",
+    "Audience": "http://localhost:5201/",
+    "AccessTokenExpirationMinutes": "15",
+    "RefreshTokenExpirationDays": "7"
+  }
+}
+```
