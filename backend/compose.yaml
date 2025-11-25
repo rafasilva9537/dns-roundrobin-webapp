@@ -23,6 +23,7 @@
       target: final
     ports:
       - "5001:8080"
+    hostname: api1_server
     environment: &api_env
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
@@ -43,6 +44,7 @@
       target: final
     ports:
       - "5002:8080"
+    hostname: api2_server
     environment: *api_env
     depends_on:
       db:
@@ -56,6 +58,7 @@
       target: final
     ports:
       - "5003:8080"
+    hostname: api3_server
     environment: *api_env
     depends_on:
       db:
