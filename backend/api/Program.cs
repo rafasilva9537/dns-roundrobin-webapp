@@ -58,7 +58,7 @@ else
 
 app.UseExceptionHandler();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors(myAllowAllOrigins);
 
