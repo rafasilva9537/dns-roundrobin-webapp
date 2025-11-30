@@ -1,7 +1,3 @@
-Here is the content formatted into clean, structured Markdown.
-
------
-
 # dns-roundrobin-webapp
 
 Multi-server ASP.NET web application load-balanced via DNS Round Robin, where users authenticate using JWT and remain logged in across all backend nodes thanks to centralized session persistence.
